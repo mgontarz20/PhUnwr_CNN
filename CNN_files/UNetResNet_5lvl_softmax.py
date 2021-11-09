@@ -3,10 +3,10 @@ from tensorflow.keras.models import Model
 from keras.layers.convolutional import Conv2D,Conv2DTranspose
 from keras.layers.pooling import MaxPooling2D
 from keras.layers.merge import concatenate
-from CNNs.blocks import conv2d_block, residual_block
+from blocks import conv2d_block, residual_block
 
 
-def get_unet(input_img, n_filters=8, kernel_size = 3, activation = 'relu'):
+def get_unet(input_img, num_classes, n_filters=8, kernel_size = 3, activation = 'relu'):
     """Funkcja definiująca model o architekturze U-Net z blokami resztkowymi."""
     #Ścieżka kurcząca
     c1 = conv2d_block(input_img, n_filters * 1, kernel_size, activation)
@@ -68,6 +68,6 @@ def get_unet(input_img, n_filters=8, kernel_size = 3, activation = 'relu'):
     r11 = residual_block(c11, n_filters * 1,activation, kernel_size)
     cc11 = conv2d_block(r11, n_filters * 1, kernel_size, activation)
 
-    outputs = Conv2D(1, (1, 1), activation='softmax')(cc11)
+    outputs = Conv2D(num_classes, (1, 1), activation='softmax')(cc11)
     model = Model(inputs=[input_img], outputs=[outputs])
     return model
